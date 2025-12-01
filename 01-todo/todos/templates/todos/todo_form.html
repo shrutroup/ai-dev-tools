@@ -1,0 +1,59 @@
+{% extends 'todos/base.html' %}
+
+{% block title %}{% if object %}Edit{% else %}Create{% endif %} TODO{% endblock %}
+
+{% block content %}
+<h1>{% if object %}Edit{% else %}Create{% endif %} TODO</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="id_title">Title *</label>
+        {{ form.title }}
+        {% if form.title.errors %}
+        <div style="color: #dc3545; font-size: 12px; margin-top: 5px;">
+            {{ form.title.errors }}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="id_description">Description</label>
+        {{ form.description }}
+        {% if form.description.errors %}
+        <div style="color: #dc3545; font-size: 12px; margin-top: 5px;">
+            {{ form.description.errors }}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="id_due_date">Due Date</label>
+        {{ form.due_date }}
+        {% if form.due_date.errors %}
+        <div style="color: #dc3545; font-size: 12px; margin-top: 5px;">
+            {{ form.due_date.errors }}
+        </div>
+        {% endif %}
+    </div>
+
+    {% if object %}
+    <div class="form-group">
+        <label>
+            {{ form.is_resolved }} Resolved
+        </label>
+        {% if form.is_resolved.errors %}
+        <div style="color: #dc3545; font-size: 12px; margin-top: 5px;">
+            {{ form.is_resolved.errors }}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div style="margin-top: 30px;">
+        <button type="submit" class="btn">Save</button>
+        <a href="{% url 'todo_list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

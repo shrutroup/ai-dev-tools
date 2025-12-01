@@ -1,0 +1,57 @@
+{% extends 'todos/base.html' %}
+
+{% block title %}Daily Task List{% endblock %}
+
+{% block content %}
+<h1>Daily Task List</h1>
+
+{% if total_todos > 0 %}
+<div style="margin-bottom: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 14px; font-weight: bold;">Progress: {{ resolved_todos }}/{{ total_todos }} tasks completed</span>
+        <span style="font-size: 14px; font-weight: bold;">{{ completion_percentage }}%</span>
+    </div>
+    <div class="progress-bar-bg" style="width: 100%; height: 25px; border-radius: 12px; overflow: hidden;">
+        <div style="height: 100%; background: linear-gradient(90deg, #4CAF50 0%, #45a049 100%); width: {{ completion_percentage }}%; transition: width 0.3s ease;"></div>
+    </div>
+</div>
+{% endif %}
+
+<a href="{% url 'todo_create' %}" class="btn">+ Add New TODO</a>
+
+<div style="margin-top: 30px;">
+    {% if todos %}
+        {% for todo in todos %}
+        <div class="todo-item {% if todo.is_resolved %}resolved{% endif %}">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div style="flex: 1;">
+                    <h3 class="todo-title {% if todo.is_resolved %}resolved{% endif %}">
+                        {{ todo.title }}
+                    </h3>
+                    {% if todo.description %}
+                    <p class="todo-description">{{ todo.description }}</p>
+                    {% endif %}
+                    <div class="todo-meta">
+                        {% if todo.due_date %}
+                        <span style="margin-right: 15px;">Due: {{ todo.due_date }}</span>
+                        {% endif %}
+                        <span>Created: {{ todo.created_at|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    {% if todo.is_resolved %}
+                    <a href="{% url 'todo_toggle' todo.pk %}" class="btn btn-secondary">Mark Unresolved</a>
+                    {% else %}
+                    <a href="{% url 'todo_toggle' todo.pk %}" class="btn btn-success">Mark Resolved</a>
+                    {% endif %}
+                    <a href="{% url 'todo_update' todo.pk %}" class="btn">Edit</a>
+                    <a href="{% url 'todo_delete' todo.pk %}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="text-align: center; color: #888; margin-top: 50px;">No todos yet. Create your first one!</p>
+    {% endif %}
+</div>
+{% endblock %}
